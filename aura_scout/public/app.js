@@ -469,10 +469,16 @@
 
     function extractFilename(url) {
         try { 
-            const path = new URL(url).pathname;
-            return path.split('/').pop() || 'packet.mp4'; 
+            const urlObj = new URL(url);
+            const v = urlObj.searchParams.get('v');
+            if (v) return `Target_${v}.mp4`;
+            
+            const pathParts = urlObj.pathname.split('/');
+            const lastPart = pathParts.pop() || 'packet.mp4';
+            return lastPart === 'watch' ? 'packet.mp4' : (lastPart.includes('.') ? lastPart : `Target_${lastPart}.mp4`);
         } catch { return 'packet.mp4'; }
     }
+
 
     // ─── Initialization ───
     initMatrix();

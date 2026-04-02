@@ -1,1 +1,0 @@
-clang diag: warning: argument unused during compilation: '-LC:\ffmpeg\lib' [-Wunused-command-line-argument]

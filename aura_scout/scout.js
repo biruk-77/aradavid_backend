@@ -18,19 +18,28 @@ const YOUTUBE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 const DEFAULT_SEGMENTS = 8;
 
 /**
- * 🔱 THE CORE SENSOR: Determine total file size for segmentation
+ * 🔱 THE CORE SENSOR: Determine total file size for segmentation using a tiny GET
  */
 async function fetchContentLength(url) {
     try {
-        const resp = await axios.head(url, {
-            headers: { 'User-Agent': YOUTUBE_USER_AGENT }
+        // HEAD is often blocked, so we use a GET for the first byte
+        const resp = await axios.get(url, {
+            headers: { 
+                'User-Agent': YOUTUBE_USER_AGENT,
+                'Range': 'bytes=0-0'
+            }
         });
+        if (resp.headers['content-range']) {
+            const parts = resp.headers['content-range'].split('/');
+            if (parts.length > 1) return parseInt(parts[1]);
+        }
         return parseInt(resp.headers['content-length'] || 0);
     } catch (e) {
-        console.error(`[SCENSOR] Head request failed: ${e.message}`);
+        console.error(`[SCENSOR] Length probe failed: ${e.message}`);
         return 0;
     }
 }
+
 
 /**
  * 🔱 THE TURBO-SEGMENT PIPE: Divide-and-conquer byte streams
@@ -64,14 +73,19 @@ async function TurboStreamPipe(videoId, quality, req, res, segments = DEFAULT_SE
 
         console.log(`[TURBO] Ingesting ${videoId} via ${segments} parallel segments. Range: ${start}-${end}`);
 
-        // Set response headers early
+        // Set response headers
         res.status(rangeHeader ? 206 : 200);
-        res.setHeader('Content-Type', 'video/mp4');
+        res.setHeader('Content-Type', quality === 'audio' ? 'audio/x-m4a' : 'video/mp4');
         res.setHeader('Accept-Ranges', 'bytes');
-        if (totalSize > 0) {
+        
+        if (rangeHeader && totalSize > 0) {
             res.setHeader('Content-Range', `bytes ${start}-${end}/${totalSize}`);
+        }
+        
+        if (totalSize > 0) {
             res.setHeader('Content-Length', contentLength);
         }
+
 
         // Parallel Ingestion
         const segmentPromises = [];
@@ -244,6 +258,10 @@ app.get('/api/download', async (req, res) => {
     } catch(e) { return res.status(400).send('Invalid URL'); }
 
     console.log(`[TURBO DL] Multi-part download requested: ${videoId}`);
+    
+    // Serve as attachment with correct filename
+    const ext = quality === 'audio' ? 'm4a' : 'mp4';
+    res.setHeader('Content-Disposition', `attachment; filename="Target_${videoId}.${ext}"`);
     
     // For downloads, we use 16 segments for maximum saturation
     await TurboStreamPipe(videoId, quality, req, res, 16);

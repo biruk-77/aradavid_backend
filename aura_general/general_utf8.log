@@ -1,7 +1,0 @@
-﻿[AURA GENERAL] Launching Command Plane on http://localhost:8080
-[AURA GENERAL] [JOB REGISTERED] ID: a54de273-7df0-4352-8074-a190d460ce95 | URL: http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
-[AURA GENERAL] [JOB REGISTERED] ID: 8598eafc-c8f3-4c8e-a0b2-3bf2948b4184 | URL: https://vjs.zencdn.net/v/oceans.mp4
-[AURA GENERAL] [STATUS SYNC] ID: 8598eafc-c8f3-4c8e-a0b2-3bf2948b4184 -> INGESTING
-[AURA GENERAL] [STATUS SYNC] ID: a54de273-7df0-4352-8074-a190d460ce95 -> INGESTING
-[AURA GENERAL] [STATUS SYNC] ID: 8598eafc-c8f3-4c8e-a0b2-3bf2948b4184 -> INGESTING
-[AURA GENERAL] [STATUS SYNC] ID: a54de273-7df0-4352-8074-a190d460ce95 -> INGESTING

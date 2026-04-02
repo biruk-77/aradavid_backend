@@ -1,1 +1,43 @@
-node_modules
+# --- AURA TRINITY: SILICON GOD IGNORE ---
+
+# Dependencies
+node_modules/
+package-lock.json
+target/
+.pub-cache/
+.dart_tool/
+build/
+dist/
+
+# Media Binaries (Huge)
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.mov
+*.ppm
+*.raw
+*.yuv
+*.bin
+*.log
+!engine_debug.log
+
+# Temporary / Forensic Artifacts
+videoplayback*
+watch*
+snapshot_*
+first_frame.ppm
+Unconfirmed*
+*.crdownload
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project Specific
+youtube_player_flutter/
+aura_general/target/
+aura_media_engine/target/
+aura_dl_debug/node_modules/

@@ -107,3 +107,8 @@
 [1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 1: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
 [1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 1: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
 [1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 2: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
+[1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 1: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
+[AURA TASK 2] [FATAL] Source failed to open. CDNs might be blocking access! FFmpeg Error: ffmpeg::Error(1094995529: Invalid data found when processing input)
+[1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 2: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
+[AURA TASK 3] [FATAL] Source failed to open. CDNs might be blocking access! FFmpeg Error: ffmpeg::Error(1094995529: Invalid data found when processing input)
+[1;31m[CRITICAL ERROR] H.264 SNIPER THREAD CRASHED FOR ID 3: ffmpeg::Error(1094995529: Invalid data found when processing input)[0m
