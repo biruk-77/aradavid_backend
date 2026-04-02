@@ -1,0 +1,4 @@
+EXPORTS
+GetSystemWow64Directory2A
+GetSystemWow64Directory2W
+Wow64SetThreadDefaultGuestMachine

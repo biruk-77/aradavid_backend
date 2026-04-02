@@ -1,0 +1,4 @@
+EXPORTS
+AllocateUserPhysicalPages2
+OpenDedicatedMemoryPartition
+QueryPartitionInformation

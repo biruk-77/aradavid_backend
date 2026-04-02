@@ -1,0 +1,5 @@
+EXPORTS
+OpenFileMappingFromApp
+SetProcessValidCallTargets
+VirtualAllocFromApp
+VirtualProtectFromApp

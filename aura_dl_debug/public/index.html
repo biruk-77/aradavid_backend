@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA FORGE — Diagnostic Downloader</title>
+    <!-- Use Inter and JetBrains Mono for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07070a;
+            --glass: rgba(15, 15, 25, 0.7);
+            --border: rgba(0, 240, 255, 0.15);
+            --glow: 0 0 20px rgba(0, 240, 255, 0.2);
+            --accent: #00f0ff;
+            --primary: #ffffff;
+            --dim: #718096;
+            --red: #ff3366;
+            --green: #00ff66;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-image: 
+                radial-gradient(circle at top right, rgba(0, 240, 255, 0.05), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(255, 51, 102, 0.05), transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--glow), 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, #a0aec0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            gap: 15px;
+        }
+
+        input {
+            flex: 1;
+            padding: 20px 25px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            color: white;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: inset 0 0 10px rgba(0,240,255,0.1);
+        }
+
+        .btn {
+            padding: 0 30px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-download:hover {
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .terminal-container {
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            border: 1px solid #1f2937;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .terminal-header {
+            background: #111827;
+            padding: 10px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            border-bottom: 1px solid #1f2937;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .terminal {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .log-info { color: #aaaaaa; }
+        .log-error { color: var(--red); font-weight: bold; }
+        .log-done { color: var(--green); font-weight: bold; }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <span class="tag">Diagnostic & Extraction Proxy</span>
+            <h1 class="title">AURA FORGE</h1>
+        </header>
+
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Paste streaming URL structure here...">
+            <button class="btn btn-primary" id="debugBtn">
+                <svg style="width:18px;height:18px;margin-right:8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Verify & Log
+            </button>
+            <button class="btn btn-download" id="downloadBtn">
+                <svg style="width:18px;height:18px;margin-right:8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Force Download
+            </button>
+        </div>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <span>SYSTEM_LOGS > root@aura-forge</span>
+                <span id="status-text">IDLE</span>
+            </div>
+            <div class="terminal" id="terminal">
+<span class="log-info">Aura Forge OS Initialized.
+Connected to God Mosaic backbone.
+Awaiting payload URL...</span><br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const debugBtn = document.getElementById('debugBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const input = document.getElementById('urlInput');
+        const terminal = document.getElementById('terminal');
+        const statusText = document.getElementById('status-text');
+        
+        let eventSource = null;
+
+        debugBtn.addEventListener('click', () => {
+            const url = input.value.trim();
+            if (!url) return;
+
+            terminal.innerHTML = "";
+            appendLog(`[SYSTEM] Initializing forensic array targeting: ${url}\n\n`, 'log-info');
+            statusText.textContent = "VERIFYING";
+            statusText.style.color = "var(--accent)";
+            
+            if (eventSource) eventSource.close();
+            eventSource = new EventSource(`/api/test-download?url=${encodeURIComponent(url)}`);
+
+            eventSource.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                
+                if (data.type === 'error') {
+                    appendLog(data.text, 'log-error');
+                } else if (data.type === 'done') {
+                    appendLog(data.text, 'log-done');
+                    eventSource.close();
+                    statusText.textContent = "VERIFICATION COMPLETE";
+                    statusText.style.color = "var(--green)";
+                } else {
+                    appendLog(data.text, 'log-info');
+                }
+            };
+
+            eventSource.onerror = () => {
+                appendLog("[SYSTEM] Connection to backend lost.", 'log-error');
+                eventSource.close();
+                statusText.textContent = "CONNECTION FAILED";
+                statusText.style.color = "var(--red)";
+            };
+        });
+
+        // The Force Download button routes to the incredibly fast standalone Downloader located on Port 3031 in the main Scout
+        downloadBtn.addEventListener('click', () => {
+            const url = input.value.trim();
+            if (!url) {
+                alert('Please enter a URL first');
+                return;
+            }
+            
+            appendLog(`[SYSTEM] Relaying manual force-download via Aura Core (Port 3031)...\n`, 'log-done');
+            
+            // Redirect the window or trigger an invisible native download linking to the Scout
+            const downloadUrl = `http://localhost:3031/api/download?url=${encodeURIComponent(url)}`;
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'true';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
+        function appendLog(text, className) {
+            const span = document.createElement('span');
+            span.className = className;
+            span.textContent = text;
+            terminal.appendChild(span);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    </script>
+</body>
+</html>

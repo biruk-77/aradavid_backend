@@ -1,0 +1,4 @@
+EXPORTS
+MapViewOfFileNuma2
+UnmapViewOfFile2
+VirtualUnlockEx

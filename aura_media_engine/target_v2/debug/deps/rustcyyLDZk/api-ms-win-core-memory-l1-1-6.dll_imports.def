@@ -1,0 +1,5 @@
+EXPORTS
+MapViewOfFile3
+MapViewOfFile3FromApp
+VirtualAlloc2
+VirtualAlloc2FromApp
